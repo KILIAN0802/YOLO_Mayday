@@ -1,0 +1,72 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "YOLOv8 Urticaria Detection API",
+        "version": "1.0.0",
+        "description": "API to detect urticaria (hives) using a custom YOLOv8 model and calculate Local AUAS score."
+    },
+    "servers": [
+        {
+            "url": "/",
+            "description": "Current Server"
+        }
+    ],
+    "paths": {
+        "/predict": {
+            "post": {
+                "summary": "Detect urticaria in an image and calculate AUAS score",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "image": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "description": "Image file to process"
+                                    }
+                                },
+                                "required": ["image"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful detection and AUAS calculation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "Hives Count (Nh)": {
+                                            "type": "integer",
+                                            "description": "Number of hives detected in the image"
+                                        },
+                                        "Itch Severity (I)": {
+                                            "type": "integer",
+                                            "description": "Randomly generated itch severity score (0-3)"
+                                        },
+                                        "Local AUAS": {
+                                            "type": "integer",
+                                            "description": "Calculated Local AUAS score"
+                                        },
+                                        "annotated_image_base64": {
+                                            "type": "string",
+                                            "description": "Base64 encoded string of the image with detected hives annotated"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request or no image file provided"
+                    }
+                }
+            }
+        }
+    }
+}
