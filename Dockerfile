@@ -21,8 +21,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir -p /app/weights
 
 # Copy the trained model weights from your local 'weights' folder.
-# Ensure you have copied 'best.pt' from your training output (e.g., /content/runs/detect/train6/weights/best.pt)
-# to a local 'weights' directory where your Dockerfile resides.
+# Place best.pt in the repository's weights/ directory before building the image.
 COPY weights/best.pt /app/weights/best.pt
 
 # Copy the inference core and Flask application files

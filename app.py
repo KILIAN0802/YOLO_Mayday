@@ -8,7 +8,13 @@ from inference_core import load_yolo_model, predict_image
 app = Flask(__name__)
 
 # Load the model once when the app starts
-MODEL_PATH = "/app/weights/best.pt" # Path inside the Docker container
+MODEL_PATH = os.environ.get("MODEL_PATH", "/app/weights/best.pt")
+
+if not os.path.exists(MODEL_PATH):
+    raise FileNotFoundError(
+        f"Model file not found at {MODEL_PATH}. Put best.pt in weights/ before building the image or set MODEL_PATH."
+    )
+
 yolo_model = load_yolo_model(MODEL_PATH)
 
 UPLOAD_FOLDER = 'uploads'
