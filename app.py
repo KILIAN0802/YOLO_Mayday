@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_from_directory, Response
+from flask import redirect, url_for
 import os
 import uuid
 import cv2
@@ -19,6 +20,49 @@ yolo_model = load_yolo_model(MODEL_PATH)
 
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+
+@app.route("/swagger.json")
+def swagger_spec():
+    return send_from_directory(os.path.dirname(os.path.abspath(__file__)), "swagger.json")
+
+
+@app.route("/swagger")
+def swagger_ui():
+        html = """
+        <!doctype html>
+        <html lang="en">
+            <head>
+                <meta charset="utf-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <title>YOLOv8 Urticaria Detection API</title>
+                <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
+                <style>
+                    body { margin: 0; background: #f6f8fb; }
+                    #swagger-ui { max-width: 1200px; margin: 0 auto; }
+                </style>
+            </head>
+            <body>
+                <div id="swagger-ui"></div>
+                <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+                <script>
+                    window.ui = SwaggerUIBundle({
+                        url: '/swagger.json',
+                        dom_id: '#swagger-ui',
+                        deepLinking: true,
+                        presets: [SwaggerUIBundle.presets.apis],
+                        layout: 'BaseLayout'
+                    });
+                </script>
+            </body>
+        </html>
+        """
+        return Response(html, mimetype="text/html")
+
+
+@app.route("/")
+def index():
+        return redirect(url_for("swagger_ui"))
 
 @app.route('/predict', methods=['POST'])
 def predict():
