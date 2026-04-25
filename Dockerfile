@@ -27,6 +27,7 @@ COPY weights/best.pt /app/weights/best.pt
 # Copy the inference core and Flask application files
 COPY inference_core.py .
 COPY app.py .
+COPY swagger.json .
 
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
