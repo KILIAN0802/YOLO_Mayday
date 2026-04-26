@@ -9,7 +9,11 @@
         {
             "url": "/",
             "description": "Current Server"
-        }
+        },
+        {
+        "url": "https://drmayday.ibme.edu.vn/yolo",
+        "description": "Production Server"
+    }
     ],
     "paths": {
         "/predict": {
