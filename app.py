@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory, Response
 from flask import redirect, url_for
+from werkzeug.utils import secure_filename
 import os
 import uuid
 import cv2
@@ -74,7 +75,13 @@ def predict():
         return jsonify({"error": "No selected file"}), 400
 
     if file:
-        filename = f"{uuid.uuid4()}_{file.filename}"
+        # Some clients send full/relative paths in filename; keep only a safe basename.
+        original_name = os.path.basename(file.filename)
+        safe_name = secure_filename(original_name)
+        if not safe_name:
+            safe_name = "upload.bin"
+
+        filename = f"{uuid.uuid4()}_{safe_name}"
         filepath = os.path.join(UPLOAD_FOLDER, filename)
         file.save(filepath)
 
