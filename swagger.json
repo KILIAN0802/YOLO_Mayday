@@ -30,6 +30,12 @@
                                         "type": "string",
                                         "format": "binary",
                                         "description": "Image file to process"
+                                    },
+                                    "itch_severity": {
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 3,
+                                        "description": "Itch severity score (0: None, 1: Mild, 2: Moderate, 3: Severe). Default is 0."
                                     }
                                 },
                                 "required": ["image"]
@@ -51,7 +57,7 @@
                                         },
                                         "Itch Severity (I)": {
                                             "type": "integer",
-                                            "description": "Randomly generated itch severity score (0-3)"
+                                            "description": "The itch severity score provided in the request (0-3)"
                                         },
                                         "Local AUAS": {
                                             "type": "integer",

@@ -74,6 +74,14 @@ def predict():
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
 
+    # Get itch_severity from form data, default to 0 if not provided
+    try:
+        itch_severity = int(request.form.get('itch_severity', 0))
+        if not (0 <= itch_severity <= 3):
+            return jsonify({"error": "itch_severity must be between 0 and 3"}), 400
+    except ValueError:
+        return jsonify({"error": "itch_severity must be an integer"}), 400
+
     if file:
         # Some clients send full/relative paths in filename; keep only a safe basename.
         original_name = os.path.basename(file.filename)
@@ -85,7 +93,7 @@ def predict():
         filepath = os.path.join(UPLOAD_FOLDER, filename)
         file.save(filepath)
 
-        results = predict_image(yolo_model, filepath)
+        results = predict_image(yolo_model, filepath, itch_severity=itch_severity)
 
         # Clean up the uploaded image
         os.remove(filepath)

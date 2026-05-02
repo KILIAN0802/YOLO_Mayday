@@ -17,15 +17,15 @@ def calculate_local_auas(Nh: int, I: int) -> int:
 def load_yolo_model(model_path: str):
     return YOLO(model_path)
 
-def predict_image(model: YOLO, img_path: str, conf_thres: float = 0.25, iou_thres: float = 0.5):
+def predict_image(model: YOLO, img_path: str, itch_severity: int = 0, conf_thres: float = 0.25, iou_thres: float = 0.5):
     # Predict with the model on the given image path, focusing on 'Urticaria' class (class_id=1)
     # based on the validation output in cell D2YkphuiaE7_ where Urticaria is class 1.
     preds = model.predict(source=img_path, conf=conf_thres, iou=iou_thres, show=False, verbose=False, classes=1)
 
     Nh = len(preds[0].boxes) if preds and preds[0].boxes else 0 # Number of hives
     
-    # For demonstration, generate a random itch severity. In a real API, this might be an input.
-    I = random.randint(0, 3)
+    # Use the itch severity provided by the user
+    I = itch_severity
 
     local_auas = calculate_local_auas(Nh, I)
 
